@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fun Facts Generator</title>
+  <style>
+    :root {
+      --bg: #e0eafc;
+      --card-bg: #fff;
+      --accent: #43cea2;
+      --text: #2d3a4b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.6s;
+    }
+    .container {
+      max-width: 500px;
+      margin: 60px auto 0 auto;
+      background: var(--card-bg);
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2rem 1.5rem 2.5rem 1.5rem;
+      text-align: center;
+      transition: background 0.6s;
+    }
+    h1 {
+      font-size: 2rem;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    .fact-card {
+      background: #f6fafd;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+      transition: background 0.6s, color 0.6s;
+    }
+    .fact-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+      background: #eee;
+    }
+    .btn {
+      background: linear-gradient(90deg, var(--accent) 0%, #185a9d 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:hover, .btn:focus {
+      background: linear-gradient(90deg, #185a9d 0%, var(--accent) 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 1.2rem 0 0.7rem 0;
+      font-size: 0.95rem;
+      color: #6c7a89;
+    }
+    footer a {
+      color: #185a9d;
+      text-decoration: none;
+    }
+    @media (max-width: 600px) {
+      .container {
+        margin: 30px 8px 0 8px;
+        padding: 1.2rem 0.7rem 1.5rem 0.7rem;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      .fact-card {
+        font-size: 1rem;
+        padding: 1rem;
+      }
+      .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.98rem;
+      }
+      .fact-image {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>🎉 Fun Facts Generator</h1>
+    <div id="fact-card" class="fact-card">
+      <img id="fact-image" class="fact-image" src="" alt="Fact illustration" />
+      <p id="fact-text"></p>
+    </div>
+    <button id="next-btn" class="btn">Show Another Fact</button>
+  </main>
+  <footer>
+    <p>Made for GenAI 101 Workshop &middot; <a href="https://github.com/pieces-app/genai-101/" target="_blank">Source</a></p>
+  </footer>
+  <script>
+    // Curated color palette for variety and accessibility
+    const colorThemes = [
+      { bg: "#e0eafc", card: "#fff", accent: "#43cea2", text: "#2d3a4b" },
+      { bg: "#fceabb", card: "#fffbe7", accent: "#f8b500", text: "#6d4c00" },
+      { bg: "#f8ffae", card: "#fff", accent: "#43cea2", text: "#3a3a3a" },
+      { bg: "#f5f7fa", card: "#c3cfe2", accent: "#185a9d", text: "#2d3a4b" },
+      { bg: "#fbc2eb", card: "#fff", accent: "#a18cd1", text: "#4b2d4b" },
+      { bg: "#f9f9f9", card: "#e0eafc", accent: "#43cea2", text: "#2d3a4b" },
+      { bg: "#e0c3fc", card: "#fff", accent: "#8ec5fc", text: "#3a3a3a" },
+      { bg: "#f0f2f0", card: "#fff", accent: "#000c40", text: "#333" }
+    ];
+
+    // Fun facts with images (royalty-free Unsplash images)
+    const facts = [
+      {
+        fact: "Honey never spoils. Archaeologists have found edible honey in ancient Egyptian tombs.",
+        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+      },
+      {
+        fact: "Bananas are berries, but strawberries are not.",
+        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80"
+      },
+      {
+        fact: "Octopuses have three hearts and blue blood.",
+        image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80"
+      },
+      {
+        fact: "A group of flamingos is called a 'flamboyance.'",
+        image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80"
+      },
+      {
+        fact: "The Eiffel Tower can be 15 cm taller during hot days due to thermal expansion.",
+        image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80"
+      },
+      {
+        fact: "Wombat poop is cube-shaped.",
+        image: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=400&q=80"
+      },
+      {
+        fact: "Venus is the only planet that spins clockwise.",
+        image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=400&q=80"
+      },
+      {
+        fact: "A day on Mercury is longer than its year.",
+        image: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=400&q=80"
+      },
+      {
+        fact: "Some turtles can breathe through their butts.",
+        image: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=400&q=80"
+      },
+      {
+        fact: "The unicorn is the national animal of Scotland.",
+        image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80"
+      }
+    ];
+
+    let lastIndex = -1;
+
+    function getRandomIndex(arrLength, lastIdx) {
+      let idx;
+      do {
+        idx = Math.floor(Math.random() * arrLength);
+      } while (idx === lastIdx && arrLength > 1);
+      return idx;
+    }
+
+    function applyTheme(theme) {
+      document.body.style.background = theme.bg;
+      document.querySelector('.container').style.background = theme.card;
+      document.documentElement.style.setProperty('--accent', theme.accent);
+      document.documentElement.style.setProperty('--text', theme.text);
+      document.querySelector('h1').style.color = theme.text;
+      document.querySelector('.fact-card').style.color = theme.text;
+    }
+
+    function showRandomFact() {
+      const idx = getRandomIndex(facts.length, lastIndex);
+      lastIndex = idx;
+      const factObj = facts[idx];
+
+      // Pick a random color theme
+      const theme = colorThemes[getRandomIndex(colorThemes.length, -1)];
+      applyTheme(theme);
+
+      // Update fact and image
+      document.getElementById('fact-text').textContent = factObj.fact;
+      document.getElementById('fact-image').src = factObj.image;
+      document.getElementById('fact-image').alt = "Illustration for: " + factObj.fact;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      showRandomFact();
+      document.getElementById('next-btn').addEventListener('click', showRandomFact);
+    });
+  </script>
+</body>
+</html>
